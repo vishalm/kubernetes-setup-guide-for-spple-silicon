@@ -125,10 +125,17 @@ Create a token for Dashboard authentication:
 
 ```bash
 # Generate token
-kubectl create token admin-user -n kubernetes-dashboard
+kubectl create token admin-user -n kubernetes-dashboard > dashboard-admin-token.txt
 ```
 
-Save this token securely (e.g., in a file named `admin-token.txt`).
+This Save  token securely (e.g., in a file named `dashboard-admin-token.txt`).
+
+```bash
+SECRET_NAME=$(kubectl get serviceaccount admin-user -n kubernetes-dashboard -o jsonpath='{.secrets[0].name}')
+
+# Get the token from the secret
+kubectl get secret $SECRET_NAME -n kubernetes-dashboard -o jsonpath='{.data.token}' | base64 --decode
+```
 
 ## Step 7: Access the Dashboard
 
